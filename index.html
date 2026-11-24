@@ -1,0 +1,1903 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f1115" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="icon-192.svg" />
+  <title>Absensi Panitia Debarkasi Palembang 1447H/2026M - Kemenhaj RI</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --bg-dark: #0f1115;
+      --bg-panel: rgba(24, 27, 34, 0.9);
+      --bg-card: rgba(32, 36, 46, 0.9);
+      --gold-primary: #eab308;
+      --gold-bright: #facc15;
+      --gold-dark: #b45309;
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --border-gold: rgba(234, 179, 8, 0.42);
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg-photo-url: url("Gemini_Generated_Image_tkf6q2tkf6q2tkf6.jpeg");
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: rgba(234, 179, 8, 0.2);
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow-x: hidden;
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(180deg, rgba(10, 12, 16, 0.72) 0%, rgba(15, 17, 21, 0.84) 100%),
+        var(--bg-photo-url);
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    @keyframes slideInFromSide {
+      0% { opacity: 0; transform: translateX(70px) scale(0.92); }
+      70% { opacity: 1; transform: translateX(-6px) scale(1.02); }
+      100% { opacity: 1; transform: translateX(0) scale(1); }
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 14px rgba(250, 204, 21, 0.45); }
+      50% { box-shadow: 0 0 26px rgba(250, 204, 21, 0.8); }
+    }
+
+    header {
+      background: linear-gradient(135deg, rgba(9, 10, 13, 0.94) 0%, rgba(23, 26, 33, 0.94) 60%, rgba(31, 26, 13, 0.94) 100%);
+      backdrop-filter: blur(6px);
+      border-bottom: 3px solid var(--gold-primary);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 6px 24px rgba(0, 0, 0, 0.65);
+    }
+
+    .header-left {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-width: calc(100% - 88px);
+    }
+
+    .badge-kemenhaj {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(234, 179, 8, 0.14);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-bright);
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      width: fit-content;
+    }
+
+    header h1 {
+      font-size: 1.18rem;
+      font-weight: 800;
+      letter-spacing: 0.3px;
+      color: #ffffff;
+      line-height: 1.25;
+    }
+
+    header p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .logo-corner-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 68px;
+      height: 68px;
+      border-radius: 50%;
+      background: #000;
+      border: 2.5px solid var(--gold-bright);
+      animation: pulseGlow 3s infinite ease-in-out;
+      flex-shrink: 0;
+      cursor: pointer;
+    }
+
+    .logo-slide-in {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      animation: slideInFromSide 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+
+    /* Banner Instalasi Langsung di Android */
+    .install-banner {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      background: linear-gradient(90deg, #1f1a0d, #29220e);
+      border-bottom: 1.5px solid var(--gold-primary);
+      padding: 10px 16px;
+      font-size: 0.82rem;
+    }
+
+    .install-banner.show {
+      display: flex;
+    }
+
+    .page-nav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: rgba(15, 17, 21, 0.88);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-btn {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-gold);
+      color: var(--text-muted);
+      padding: 10px 14px;
+      min-height: 42px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.82rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+
+    .nav-btn:hover { color: #fff; border-color: var(--gold-bright); }
+    .nav-btn.active {
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold-primary));
+      color: #0f1115;
+      border-color: var(--gold-bright);
+    }
+
+    .page-section { display: none; width: 100%; }
+
+    .page-one-container {
+      flex: 1;
+      width: 100%;
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 18px 14px 36px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .page-one-container.active { display: flex; }
+
+    .page-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 18px 14px 40px;
+    }
+
+    .page-container.active { display: block; }
+
+    .card {
+      width: 100%;
+      background: var(--bg-panel);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-gold);
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.55);
+    }
+
+    .card-title {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--gold-bright);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 10px;
+    }
+
+    .gps-status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+      background: rgba(12, 14, 18, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 11px;
+      padding: 10px 12px;
+      margin-bottom: 14px;
+      font-size: 0.78rem;
+    }
+
+    .gps-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 999px;
+    }
+
+    .gps-badge.valid { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .gps-badge.invalid { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.45); }
+    .gps-badge.checking { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+
+    .clock-box {
+      background: linear-gradient(135deg, rgba(18, 20, 26, 0.92), rgba(30, 34, 45, 0.92));
+      border: 1px solid var(--border-gold);
+      border-radius: 14px;
+      padding: 18px 14px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .clock-time {
+      font-size: 2.35rem;
+      font-weight: 800;
+      font-variant-numeric: tabular-nums;
+      color: var(--gold-bright);
+      letter-spacing: 2px;
+    }
+
+    .clock-date { font-size: 0.86rem; color: var(--text-muted); margin-top: 4px; }
+
+    .scanner-box {
+      background: var(--bg-card);
+      border: 2px dashed var(--gold-primary);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 16px;
+      transition: all 0.2s ease;
+    }
+
+    .scanner-box:focus-within {
+      border-style: solid;
+      box-shadow: 0 0 0 4px rgba(234, 179, 8, 0.18);
+    }
+
+    .scanner-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold-bright);
+      margin-bottom: 10px;
+    }
+
+    .status-dot {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      color: var(--success);
+    }
+
+    .status-dot::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .barcode-input-group { display: flex; gap: 8px; }
+
+    #barcodeInput {
+      flex: 1;
+      min-width: 0;
+      background: rgba(12, 14, 18, 0.94);
+      border: 1.5px solid var(--gold-primary);
+      border-radius: 10px;
+      padding: 13px;
+      min-height: 46px;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      outline: none;
+    }
+
+    #barcodeInput::placeholder {
+      color: #64748b;
+      font-size: 0.86rem;
+      letter-spacing: normal;
+      font-weight: 400;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 14px;
+      min-height: 42px;
+      font-weight: 700;
+      font-size: 0.84rem;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold-bright), var(--gold-primary));
+      color: #0f1115;
+    }
+
+    .btn-gold:hover { filter: brightness(1.08); transform: translateY(-1px); }
+
+    .btn-outline {
+      background: rgba(15, 17, 21, 0.7);
+      border: 1px solid var(--border-gold);
+      color: var(--gold-bright);
+    }
+
+    .btn-outline:hover { background: rgba(234, 179, 8, 0.16); }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: #fca5a5;
+    }
+
+    .scan-result-card {
+      background: linear-gradient(145deg, rgba(28, 32, 42, 0.92), rgba(20, 23, 31, 0.92));
+      border-left: 5px solid var(--gold-primary);
+      border-radius: 12px;
+      padding: 15px;
+      transition: all 0.2s ease;
+    }
+
+    .scan-result-card.success {
+      border-left-color: var(--success);
+      background: linear-gradient(145deg, rgba(19, 38, 32, 0.94), rgba(17, 24, 22, 0.94));
+    }
+
+    .scan-result-card.error {
+      border-left-color: var(--danger);
+      background: linear-gradient(145deg, rgba(43, 19, 22, 0.94), rgba(24, 16, 18, 0.94));
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      border-left-width: 5px;
+    }
+
+    .scan-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      background: rgba(234, 179, 8, 0.2);
+      color: var(--gold-bright);
+    }
+
+    .scan-result-card.success .scan-badge { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .scan-result-card.error .scan-badge { background: rgba(239, 68, 68, 0.22); color: #fca5a5; }
+
+    .scan-notif-text { font-size: 1.22rem; font-weight: 900; margin-bottom: 6px; letter-spacing: 0.4px; }
+    .scan-notif-text.thanks { color: #34d399; }
+    .scan-notif-text.danger-text { color: #ef4444; }
+    .scan-name { font-size: 1.02rem; font-weight: 800; color: #fff; margin-bottom: 4px; }
+    .scan-meta { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+    .eligible-time-highlight { color: var(--gold-bright); font-weight: 800; }
+
+    .toast-banner {
+      position: fixed;
+      top: 96px;
+      right: 16px;
+      left: 16px;
+      margin: 0 auto;
+      z-index: 200;
+      max-width: 420px;
+      padding: 13px 16px;
+      border-radius: 12px;
+      font-size: 0.96rem;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .toast-banner.show { display: flex; }
+    .toast-banner.success { background: #064e3b; color: #a7f3d0; border: 2px solid #10b981; }
+    .toast-banner.error { background: #450a0a; color: #ef4444; border: 2px solid #ef4444; }
+
+    .lock-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(6, 8, 12, 0.82);
+      backdrop-filter: blur(5px);
+      z-index: 300;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .lock-modal-backdrop.show { display: flex; }
+
+    .lock-modal-card {
+      width: 100%;
+      max-width: 410px;
+      background: var(--bg-panel);
+      border: 1.5px solid var(--gold-primary);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.7);
+    }
+
+    .lock-modal-title { font-size: 1.05rem; font-weight: 800; color: var(--gold-bright); margin-bottom: 6px; }
+    .lock-modal-desc { font-size: 0.84rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.45; }
+    .lock-error-msg { color: #f87171; font-size: 0.8rem; font-weight: 700; margin-top: 8px; min-height: 18px; }
+    .lock-modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 14px; }
+
+    .admin-box {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 18px;
+    }
+
+    .sub-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .sub-tab-btn {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      color: var(--text-muted);
+      padding: 9px 16px;
+      min-height: 40px;
+      border-radius: 9px;
+      font-weight: 700;
+      font-size: 0.84rem;
+      cursor: pointer;
+    }
+    .sub-tab-btn.active {
+      background: rgba(234, 179, 8, 0.18);
+      border-color: var(--gold-bright);
+      color: var(--gold-bright);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } }
+
+    .stat-box {
+      background: var(--bg-card);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .stat-value { font-size: 1.45rem; font-weight: 800; color: var(--gold-bright); }
+    .stat-label { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 14px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .search-group, .action-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .search-group { flex: 1; }
+
+    .input-ctrl {
+      background: rgba(12, 14, 18, 0.94);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #fff;
+      padding: 9px 12px;
+      min-height: 40px;
+      border-radius: 9px;
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .input-ctrl:focus { border-color: var(--gold-primary); }
+
+    .table-wrapper {
+      overflow-x: auto;
+      max-height: 540px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(17, 19, 25, 0.88);
+    }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.84rem; }
+    thead { background: #111319; position: sticky; top: 0; z-index: 10; }
+    th {
+      text-align: left;
+      padding: 11px 12px;
+      color: var(--gold-bright);
+      font-weight: 700;
+      border-bottom: 2px solid var(--border-gold);
+      white-space: nowrap;
+    }
+    td { padding: 10px 12px; border-bottom: 1px solid rgba(255, 255, 255, 0.06); vertical-align: middle; }
+    tbody tr:hover { background: rgba(234, 179, 8, 0.08); }
+
+    .pill { padding: 3px 9px; border-radius: 999px; font-size: 0.73rem; font-weight: 700; white-space: nowrap; }
+    .pill-hadir { background: rgba(16, 185, 129, 0.18); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.4); }
+    .pill-kerja { background: rgba(245, 158, 11, 0.18); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.4); }
+    .pill-belum { background: rgba(148, 163, 184, 0.14); color: #cbd5e1; }
+
+    .form-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+    .loc-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
+    @media (max-width: 900px) { .form-grid, .loc-grid { grid-template-columns: 1fr; } }
+
+    .field-group { display: flex; flex-direction: column; gap: 5px; }
+    .field-group label { font-size: 0.78rem; font-weight: 700; color: var(--gold-bright); }
+    .tools-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .hint-text { font-size: 0.76rem; color: var(--text-muted); margin-top: 10px; line-height: 1.45; }
+  </style>
+</head>
+<body>
+
+  <div id="scanToast" class="toast-banner" role="alert" aria-live="assertive"></div>
+
+  <!-- BANNER INSTAL LANGSUNG DI ANDROID -->
+  <div id="androidInstallBanner" class="install-banner">
+    <div style="color:#f8fafc; line-height:1.35;">
+      📲 <b>Pasang Aplikasi di Android</b><br/>
+      <span style="font-size:0.75rem; color:#cbd5e1;">Akses layar penuh tanpa bilah browser &amp; mendukung offline.</span>
+    </div>
+    <button type="button" class="btn btn-gold" style="padding:8px 14px; min-height:38px; flex-shrink:0;" onclick="triggerAndroidInstall()">
+      Instal Sekarang
+    </button>
+  </div>
+
+  <!-- MODAL KATA SANDI UNTUK HALAMAN 2 & 3 -->
+  <div id="lockModal" class="lock-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="lockModalTitle">
+    <div class="lock-modal-card">
+      <div id="lockModalTitle" class="lock-modal-title">🔒 Halaman Terkunci</div>
+      <p id="lockModalDesc" class="lock-modal-desc">Masukkan kata sandi untuk mengakses menu ini.</p>
+      <input type="password" id="unlockPasswordInput" class="input-ctrl" style="width:100%;" placeholder="Masukkan kata sandi..." autocomplete="off" />
+      <div id="lockErrorMsg" class="lock-error-msg"></div>
+      <div class="lock-modal-actions">
+        <button type="button" class="btn btn-outline" onclick="closeLockModal()">Batal</button>
+        <button type="button" class="btn btn-gold" onclick="verifyUnlockPassword()">Buka Kunci</button>
+      </div>
+    </div>
+  </div>
+
+  <header>
+    <div class="header-left">
+      <div class="badge-kemenhaj">Kementerian Haji dan Umrah RI &bull; Android App</div>
+      <h1>SISTEM ABSENSI PANITIA DEBARKASI PALEMBANG</h1>
+      <p>Tahun Operasional Haji 1447 H / 2026 M &bull; Asrama Haji &amp; Bandara SMB II Palembang</p>
+    </div>
+
+    <div class="logo-corner-wrapper" title="Klik untuk memutar ulang efek muncul dari samping" onclick="replayLogoSlideIn()">
+      <img
+        id="kemenhajLogo"
+        class="logo-slide-in"
+        src="Lambang_Kementerian_Haji_dan_Umrah_Republik_Indonesia_(Des._2025).png"
+        alt="Logo Kementerian Haji dan Umrah RI"
+        onerror="this.onerror=null; this.src=fallbackSvgLogo;"
+      />
+    </div>
+  </header>
+
+  <nav class="page-nav" aria-label="Navigasi Halaman">
+    <button id="navPage1" class="nav-btn active" onclick="switchPage(1)">1. Menu Scan Absensi</button>
+    <button id="navPage2" class="nav-btn" onclick="switchPage(2)">🔒 2. Rekap Absen Harian &amp; Bulanan</button>
+    <button id="navPage3" class="nav-btn" onclick="switchPage(3)">🔒 3. Update Panitia</button>
+  </nav>
+
+  <!-- HALAMAN 1: MAIN MENU -->
+  <main id="page1" class="page-section page-one-container active">
+    <section class="card">
+      <div class="card-title">
+        <span>Pemindai Barcode ID</span>
+        <span class="status-dot" id="scannerStatus">Scanner Siap</span>
+      </div>
+
+      <div class="gps-status-bar">
+        <div id="gpsStatusText" style="color:#cbd5e1; line-height:1.35;">Memeriksa lokasi GPS perangkat...</div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <span id="gpsBadge" class="gps-badge checking">GPS</span>
+          <button type="button" class="btn btn-outline" style="padding:6px 10px; min-height:34px; font-size:0.75rem;" onclick="refreshDeviceLocation(true)">
+            📍 Cek Lokasi
+          </button>
+        </div>
+      </div>
+
+      <div class="clock-box">
+        <div class="clock-time" id="liveClock">00:00:00</div>
+        <div class="clock-date" id="liveDate">Memuat tanggal...</div>
+      </div>
+
+      <div class="scanner-box" onclick="focusScanner()">
+        <div class="scanner-label">
+          <span>TEMPEL / SCAN BARCODE KARTU PANITIA</span>
+          <span>Auto-Enter</span>
+        </div>
+        <div class="barcode-input-group">
+          <input type="text" id="barcodeInput" placeholder="Scan atau ketik barcode ID..." autocomplete="off" />
+          <button class="btn btn-gold" onclick="processManualScan()">Scan</button>
+        </div>
+        <p class="hint-text">
+          * Scan hanya diproses jika perangkat berada di titik lokasi yang ditetapkan admin.
+          Scan ke-1 = <b>Jam Datang</b>, Scan ke-2 = <b>Jam Pulang</b> (minimal durasi 8 jam).
+        </p>
+      </div>
+
+      <div class="scan-result-card" id="lastScanCard">
+        <span class="scan-badge" id="lastScanBadge">MENUNGGU PEMINDAIAN</span>
+        <div id="lastScanNotifText" class="scan-notif-text" style="display:none;"></div>
+        <div class="scan-name" id="lastScanName">Belum ada aktivitas scan hari ini</div>
+        <div class="scan-meta" id="lastScanMeta">
+          Silakan pindai ID Panitia (contoh: <code>1202605470</code>).
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- HALAMAN 2: REKAP ABSEN HARIAN DAN BULANAN -->
+  <section id="page2" class="page-section page-container">
+    <div class="card">
+      <div class="card-title">
+        <span>Rekap Absen Harian &amp; Bulanan</span>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <span id="activeDateBadge" style="font-size:0.84rem; color:#cbd5e1;"></span>
+          <button type="button" class="btn btn-outline" style="padding:5px 11px; font-size:0.76rem;" onclick="lockProtectedPages()">
+            🔒 Kunci Halaman
+          </button>
+        </div>
+      </div>
+
+      <div class="sub-tabs">
+        <button id="tabHarian" class="sub-tab-btn active" onclick="switchRecapMode('HARIAN')">Rekap Harian</button>
+        <button id="tabBulanan" class="sub-tab-btn" onclick="switchRecapMode('BULANAN')">Rekap Bulanan</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-value" id="statTotal">0</div>
+          <div class="stat-label" id="statLabel1">Total Panitia</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="statHadir" style="color:#34d399;">0</div>
+          <div class="stat-label" id="statLabel2">Sudah Datang</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="statPulang" style="color:#60a5fa;">0</div>
+          <div class="stat-label" id="statLabel3">Sudah Pulang</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-value" id="statBelum" style="color:#94a3b8;">0</div>
+          <div class="stat-label" id="statLabel4">Belum Absen</div>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <div class="search-group">
+          <input type="date" id="rekapDateInput" class="input-ctrl" onchange="renderRecap()" />
+          <input type="month" id="rekapMonthInput" class="input-ctrl" style="display:none;" onchange="renderRecap()" />
+          <input type="text" id="searchInput" class="input-ctrl" style="min-width: 190px;" placeholder="Cari Nama / ID / Jabatan..." oninput="renderRecap()" />
+          <select id="bidangFilter" class="input-ctrl" onchange="renderRecap()">
+            <option value="ALL">Semua Bidang Kepanitiaan</option>
+          </select>
+          <select id="statusFilter" class="input-ctrl" onchange="renderRecap()">
+            <option value="ALL">Semua Status</option>
+            <option value="HADIR">Sudah Absen</option>
+            <option value="BELUM">Belum Absen</option>
+          </select>
+        </div>
+
+        <div class="action-group">
+          <button class="btn btn-gold" onclick="exportRecapToExcel()">📥 Ekspor Excel (.xlsx)</button>
+          <button class="btn btn-danger" onclick="resetSelectedDateAttendance()">🗑️ Reset Tanggal</button>
+        </div>
+      </div>
+
+      <div id="dailyTableWrapper" class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>ID Barcode</th>
+              <th>Nama Panitia</th>
+              <th>Jabatan / Bidang</th>
+              <th>Datang</th>
+              <th>Pulang</th>
+              <th>Durasi</th>
+              <th>Status</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="dailyAttendanceBody"></tbody>
+        </table>
+      </div>
+
+      <div id="monthlyTableWrapper" class="table-wrapper" style="display:none;">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>ID Barcode</th>
+              <th>Nama Panitia</th>
+              <th>Jabatan / Bidang</th>
+              <th>Hari Datang</th>
+              <th>Hari Pulang Lengkap</th>
+              <th>Total Jam Kerja</th>
+              <th>Status Bulan</th>
+            </tr>
+          </thead>
+          <tbody id="monthlyAttendanceBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- HALAMAN 3: UPDATE PANITIA & PENGATURAN ADMIN -->
+  <section id="page3" class="page-section page-container">
+    <div class="card">
+      <div class="card-title">
+        <span>Update Data Panitia &amp; Lokasi Absensi</span>
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <span id="panitiaCountBadge" style="font-size:0.84rem; color:#cbd5e1;">0 Panitia</span>
+          <button type="button" class="btn btn-outline" style="padding:5px 11px; font-size:0.76rem;" onclick="lockProtectedPages()">
+            🔒 Kunci Halaman
+          </button>
+        </div>
+      </div>
+
+      <form id="panitiaForm" onsubmit="savePanitiaForm(event)">
+        <input type="hidden" id="editOriginalId" value="" />
+        <div class="form-grid">
+          <div class="field-group">
+            <label for="panitiaIdInput">ID Barcode *</label>
+            <input type="text" id="panitiaIdInput" class="input-ctrl" placeholder="Contoh: 1202605470" required />
+          </div>
+          <div class="field-group">
+            <label for="panitiaNoInput">No Urut</label>
+            <input type="text" id="panitiaNoInput" class="input-ctrl" placeholder="Contoh: 1" />
+          </div>
+          <div class="field-group">
+            <label for="panitiaNamaInput">Nama Panitia *</label>
+            <input type="text" id="panitiaNamaInput" class="input-ctrl" placeholder="Nama lengkap & gelar" required />
+          </div>
+          <div class="field-group">
+            <label for="panitiaJabatanInput">Jabatan</label>
+            <input type="text" id="panitiaJabatanInput" class="input-ctrl" placeholder="Contoh: Anggota / Kepala Seksi" />
+          </div>
+          <div class="field-group">
+            <label for="panitiaInstansiInput">Instansi</label>
+            <input type="text" id="panitiaInstansiInput" class="input-ctrl" placeholder="Contoh: Kanwil Kemenhaj Prov. Sumsel" />
+          </div>
+          <div class="field-group">
+            <label for="panitiaBidangInput">Bidang Kepanitiaan</label>
+            <input type="text" id="panitiaBidangInput" class="input-ctrl" placeholder="Contoh: V. SEKRETARIAT" />
+          </div>
+        </div>
+
+        <div class="tools-row">
+          <button type="submit" id="submitPanitiaBtn" class="btn btn-gold">💾 Simpan Panitia</button>
+          <button type="button" class="btn btn-outline" onclick="resetPanitiaForm()">Batal / Bersihkan Form</button>
+          <label class="btn btn-outline">
+            📂 Impor Excel (.xlsx)
+            <input type="file" id="excelFileInput" accept=".xlsx,.xls" hidden onchange="handleExcelUpload(event)" />
+          </label>
+          <label class="btn btn-outline">
+            🖼️ Muat File Logo
+            <input type="file" id="logoFileInput" accept="image/*" hidden onchange="handleLogoUpload(event)" />
+          </label>
+          <label class="btn btn-outline">
+            🌄 Muat Latar Belakang
+            <input type="file" id="bgFileInput" accept="image/*" hidden onchange="handleBackgroundUpload(event)" />
+          </label>
+        </div>
+      </form>
+
+      <div class="admin-box">
+        <div style="font-size:0.86rem; font-weight:800; color:var(--gold-bright); margin-bottom:4px;">
+          📍 Pengaturan Titik Lokasi Scan yang Diizinkan (Khusus Admin)
+        </div>
+        <p style="font-size:0.78rem; color:var(--text-muted); line-height:1.4;">
+          Tentukan koordinat Latitude, Longitude, dan radius toleransi (meter). Scan akan ditolak jika posisi HP berada di luar radius ini.
+        </p>
+
+        <div class="loc-grid">
+          <div class="field-group">
+            <label for="allowedLatInput">Latitude Titik Lokasi</label>
+            <input type="text" id="allowedLatInput" class="input-ctrl" placeholder="Contoh: -2.976074" />
+          </div>
+          <div class="field-group">
+            <label for="allowedLngInput">Longitude Titik Lokasi</label>
+            <input type="text" id="allowedLngInput" class="input-ctrl" placeholder="Contoh: 104.775430" />
+          </div>
+          <div class="field-group">
+            <label for="allowedRadiusInput">Radius Diizinkan (meter)</label>
+            <input type="number" id="allowedRadiusInput" class="input-ctrl" min="10" max="5000" placeholder="Contoh: 150" />
+          </div>
+        </div>
+
+        <div class="tools-row">
+          <button type="button" class="btn btn-outline" onclick="useCurrentLocationForAdmin()">📌 Pakai Koordinat HP Saat Ini</button>
+          <button type="button" class="btn btn-gold" onclick="saveAllowedLocation()">💾 Simpan Titik Lokasi</button>
+        </div>
+      </div>
+
+      <div class="admin-box">
+        <div style="font-size:0.86rem; font-weight:800; color:var(--gold-bright); margin-bottom:8px;">
+          🔑 Ubah Kata Sandi Halaman 2 &amp; 3
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; align-items:center;">
+          <input type="password" id="newPagePasswordInput" class="input-ctrl" style="min-width:210px;" placeholder="Kata sandi baru (min. 4 karakter)" />
+          <button type="button" class="btn btn-outline" onclick="updateProtectedPassword()">Simpan Kata Sandi Baru</button>
+        </div>
+      </div>
+
+      <div class="table-wrapper" style="margin-top: 18px;">
+        <table>
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>ID Barcode</th>
+              <th>Nama Panitia</th>
+              <th>Jabatan</th>
+              <th>Instansi</th>
+              <th>Bidang</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="panitiaMasterBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const MIN_WORK_SECONDS = 8 * 3600;
+    const DEFAULT_ADMIN_PASSWORD = "kemenhaj2026";
+    const DEFAULT_BG_IMAGE = "Gemini_Generated_Image_tkf6q2tkf6q2tkf6.jpeg";
+    const DEFAULT_ALLOWED_LOCATION = { lat: -2.9318, lng: 104.7385, radiusMeters: 150 };
+
+    let toastTimeout = null;
+    let currentPage = 1;
+    let recapMode = 'HARIAN';
+    let isProtectedUnlocked = false;
+    let pendingTargetPage = null;
+    let adminPassword = DEFAULT_ADMIN_PASSWORD;
+    let allowedLocation = { ...DEFAULT_ALLOWED_LOCATION };
+    let currentDeviceCoords = null;
+    let deferredInstallPrompt = null;
+
+    const fallbackSvgLogo = "data:image/svg+xml;utf8," + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+        <circle cx="100" cy="100" r="96" fill="#ffffff" stroke="#111315" stroke-width="5"/>
+        <circle cx="100" cy="100" r="89" fill="none" stroke="#eab308" stroke-width="5"/>
+        <circle cx="100" cy="100" r="64" fill="#111315"/>
+        <text x="100" y="25" font-size="11" font-weight="bold" text-anchor="middle" fill="#111315">KEMENTERIAN HAJI &amp; UMRAH</text>
+        <text x="100" y="183" font-size="11" font-weight="bold" text-anchor="middle" fill="#111315">REPUBLIK INDONESIA</text>
+        <polygon points="100,48 112,82 148,82 119,103 130,138 100,117 70,138 81,103 52,82 88,82" fill="#eab308"/>
+      </svg>
+    `);
+
+    // Tangkap event instalasi langsung di Android Chrome
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      document.getElementById('androidInstallBanner').classList.add('show');
+    });
+
+    window.addEventListener('appinstalled', () => {
+      deferredInstallPrompt = null;
+      document.getElementById('androidInstallBanner').classList.remove('show');
+      showToast('Aplikasi berhasil terinstal di Android!', 'success');
+    });
+
+    async function triggerAndroidInstall() {
+      if (!deferredInstallPrompt) {
+        alert('Ketuk ikon menu Chrome (⋮) di pojok kanan atas, lalu pilih "Instal aplikasi" atau "Tambahkan ke layar utama".');
+        return;
+      }
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      if (outcome === 'accepted') {
+        document.getElementById('androidInstallBanner').classList.remove('show');
+      }
+      deferredInstallPrompt = null;
+    }
+
+    // Daftarkan Service Worker agar memenuhi syarat instalasi APK/PWA Android
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+        navigator.serviceWorker.register('./sw.js').catch(() => {});
+      }
+    }
+
+    const INITIAL_PANITIA_RAW = [
+      ["1202605470","1","H. Herman Deru","Koordinator","Gubernur Provinsi Sumatera Selatan","PIMPINAN / KOORDINATOR","-"],
+      ["2202605470","2","Dr. H. Sunarto, S.Sos.I., M.Si","Wakil Koordinator","Kepala Biro Kesra Setda Prov. Sumsel","PIMPINAN / KOORDINATOR","-"],
+      ["3202605470","3","H. M. Arkan Nurwahiddin, S.Ag., M.Pd.I","Ketua PPIH","Plt. Ka. Kanwil Kemenhaj Prov. Sumsel","PIMPINAN / KOORDINATOR","-"],
+      ["4202605470","4","H. Hozinul Asror, SE., M.M","Wakil Ketua PPIH","Kepala Bagian Tata Usaha Kanwil Kemenhaj Prov. Sumsel","PIMPINAN / KOORDINATOR","-"],
+      ["5202605470","5","H. Muhammad Muammar, S.Sos.I., M.Hum","Sekretaris","Kasubbag TU Kantor Kemenhaj Kota Palembang","PIMPINAN / KOORDINATOR","-"],
+      ["6202605470","6","dr. H. Trisnawarman, M.Kes, Sp.KKLP. Subsp.FOMC","Kabid Layanan Jemaah Lansia / Disabilitas","Ka. Dinas Kesehatan Prov. Sumsel","PIMPINAN / KOORDINATOR","-"],
+      ["7202605470","7","Ahmad Syaugi Shahab","Kabid Layanan Bandara","EGM PT Angkasa Pura Indonesia KC SMB II","PIMPINAN / KOORDINATOR","-"],
+      ["8202605470","8","H. Syakir Satriady, SE","Kabid Perbekalan","Kanwil Kemenhaj Prov. Sumsel","PIMPINAN / KOORDINATOR","-"],
+      ["9202605470","9","H. Nanang Suherman, S.Ag., M.Si","Kabid Penerimaan & Pemberangkatan Jamaah","Kepala Kantor Kemenhaj Kota Palembang","PIMPINAN / KOORDINATOR","-"],
+      ["1020260547","10","Dr. H. Sholahuddin, SE., M.Si","Kabid Akomodasi","Direktur PT. Swarna Dwipa","PIMPINAN / KOORDINATOR","-"],
+      ["1120260547","11","H. M. Muhibbullah, S.Ag., M.Si","Kabid Pembinaan Jemaah & Petugas","Kabid Bina & Layanan Haji Umrah Kanwil Kemenhaj Sumsel","PIMPINAN / KOORDINATOR","-"],
+      ["1220260547","12","H. Ahmad Dasril, S.Kom","Kabid Dokumen","Kanwil Kemenhaj Prov. Sumsel","PIMPINAN / KOORDINATOR","-"],
+      ["1320260547","13","KOMPOL Alex Andriyan, S.Kom","Kabid Keamanan","Kepala Polsek Sukarami Palembang","PIMPINAN / KOORDINATOR","-"],
+      ["1420260547","14","Khairil Mirza","Kabid Imigrasi","Kepala Kantor Imigrasi Klas I TPI Palembang","PIMPINAN / KOORDINATOR","-"],
+      ["1520260547","15","Emmilya Rosa, SKM., MKM","Kabid Kesehatan","Kepala Balai Kekarantinaan Kesehatan Klas I Palembang","PIMPINAN / KOORDINATOR","-"],
+      ["1620260547","16","Wirmansyah Lukman","Kabid Kepabeanan","Kepala KPPBC Palembang","PIMPINAN / KOORDINATOR","-"],
+      ["1720260547","17","H. Firdaus, S.Sos.I., M.Si","Ka Subbag","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","A. SUBBAG TATA USAHA"],
+      ["1820260547","18","Nia Hermayani, SE","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","A. SUBBAG TATA USAHA"],
+      ["1920260547","19","Herlisa, A.Md","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","A. SUBBAG TATA USAHA"],
+      ["2020260547","20","Emi Kartika, S.A.P., M.Si","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","A. SUBBAG TATA USAHA"],
+      ["2120260547","21","Hurriyannisa, SH","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","A. SUBBAG TATA USAHA"],
+      ["2220260547","22","Fitri Lidiyana, SH","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","A. SUBBAG TATA USAHA"],
+      ["2320260547","23","Hj. Sukmawati, SE","Ka Subbag","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","B. SUBBAG KEUANGAN"],
+      ["2420260547","24","Indra Gunawan, SE","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","B. SUBBAG KEUANGAN"],
+      ["2520260547","25","H. Yan Safari, S.Si., MM","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","B. SUBBAG KEUANGAN"],
+      ["2620260547","26","Sri Lestari, SE","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","B. SUBBAG KEUANGAN"],
+      ["2720260547","27","M. Firdaus, SE","Anggota","Kanwil Kemenag Prov. Sumsel","V. SEKRETARIAT","B. SUBBAG KEUANGAN"],
+      ["2820260547","28","Aiken Depersi Apendes","Anggota","Kanwil Kemenag Prov. Sumsel","V. SEKRETARIAT","B. SUBBAG KEUANGAN"],
+      ["2920260547","29","H. Akhmad Fakhruddin, S.H.I","Ka Subbag","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","C. SUBBAG DATA DAN INFORMASI (PULAHTA)"],
+      ["3020260547","30","Hj. Verawati, S.Kom","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","C. SUBBAG DATA DAN INFORMASI (PULAHTA)"],
+      ["3120260547","31","Rifki Hidayat","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","C. SUBBAG DATA DAN INFORMASI (PULAHTA)"],
+      ["3220260547","32","H. Mukmin, S.H.I, M.Sy","Ka Subbag","Balai Diklat Keagamaan Palembang","V. SEKRETARIAT","C. SUBBAG URUSAN DALAM"],
+      ["3320260547","33","M. Tohari","Anggota","Asrama Haji","V. SEKRETARIAT","C. SUBBAG URUSAN DALAM"],
+      ["3420260547","34","Rio Satria","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","C. SUBBAG URUSAN DALAM"],
+      ["3520260547","35","Muhamad Yusup, SE","Anggota","Kanwil Kemenag Prov. Sumsel","V. SEKRETARIAT","C. SUBBAG URUSAN DALAM"],
+      ["3620260547","36","H. Alkawarizmi, S.Kom","Ka Subbag","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","D. SUBBAG HUMAS"],
+      ["3720260547","37","Nailul Husni, S.H.I","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","D. SUBBAG HUMAS"],
+      ["3820260547","38","Kartika Sari, S.H.I","Anggota","Kanwil Kemenhaj Prov. Sumsel","V. SEKRETARIAT","D. SUBBAG HUMAS"],
+      ["3920260547","39","Abdul Qudus Fitriansyah, SS","Anggota","Kanwil Kemenag Prov. Sumsel","V. SEKRETARIAT","D. SUBBAG HUMAS"],
+      ["4020260547","40","M. Irfan Amrullah, S.Kom","Anggota","Kanwil Kemenag Prov. Sumsel","V. SEKRETARIAT","D. SUBBAG HUMAS"],
+      ["4120260547","41","Nana Yunita, SE","Anggota","Kanwil Kemenag Prov. Sumsel","V. SEKRETARIAT","D. SUBBAG HUMAS"],
+      ["4220260547","42","H. A. Mirwan Chaniago, S.H.I, M.Si","Kepala Seksi","Kanwil Kemenhaj Prov. Sumsel","VI. BIDANG PENERIMAAN DAN PEMBERANGKATAN","A. SEKSI PENERIMAAN DI BANDARA"],
+      ["4320260547","43","Aiptu Langgeng P","Anggota","Polsek Sukarami (Voorijder)","VI. BIDANG PENERIMAAN DAN PEMBERANGKATAN","A. SEKSI PENERIMAAN DI BANDARA"],
+      ["4420260547","44","Muhammad Yusuf, SE","Anggota","Kanwil Kemenag Prov. Sumsel","VI. BIDANG PENERIMAAN DAN PEMBERANGKATAN","A. SEKSI PENERIMAAN DI BANDARA"],
+      ["4520260547","45","Biondi Hariono Situmorang","Anggota","Lanud Sri Mulyono Herlambang","VI. BIDANG PENERIMAAN DAN PEMBERANGKATAN","A. SEKSI PENERIMAAN DI BANDARA"],
+      ["4620260547","46","Letda Sus Muhammad Sa’id Syam Lubis","Anggota","Lanud Sri Mulyono Herlambang","VI. BIDANG PENERIMAAN DAN PEMBERANGKATAN","A. SEKSI PENERIMAAN DI BANDARA"],
+      ["4720260547","47","H. Fikri Setiawan, S.Pd.I","Kepala Seksi","Kantor Kemenhaj Kota Palembang","VI. BIDANG PENERIMAAN DAN PEMBERANGKATAN","B. SEKSI KEDATANGAN DI ASRAMA HAJI"],
+      ["5420260547","54","Musthandar","Kepala Seksi","Kanwil Kemenhaj Prov. Sumsel","VI. BIDANG PENERIMAAN DAN PEMBERANGKATAN","C. SEKSI PEMBERANGKATAN TRANSIT"],
+      ["5720260547","57","H. Muhammad Bahori, S.Kep, M. Kes","Kepala Seksi","Dinkes Prov. Sumsel","VII. BIDANG LAYANAN LANSIA / DISABILITAS","-"],
+      ["6720260547","67","H. Zaki Ihsan, SH","Kepala Seksi","Kanwil Kemenhaj Prov. Sumsel","VIII. BIDANG DOKUMEN","A. SEKSI MANIFEST"],
+      ["7020260547","70","Hj. Merlyn, SE","Kepala Seksi","Kanwil Kemenhaj Prov. Sumsel","VIII. BIDANG DOKUMEN","B. SEKSI PENYERAHAN PASPOR"],
+      ["7920260547","79","Ernika","Kepala Seksi","Asrama Haji Palembang","IX. BIDANG AKOMODASI DAN KONSUMSI","A. SEKSI PENEMPATAN JAMAAH"],
+      ["8220260547","82","H. Choirussaleh, S.Ag","Kepala Seksi","Kanwil Kemenhaj Prov. Sumsel","IX. BIDANG AKOMODASI DAN KONSUMSI","B. SEKSI PENGAWASAN CATERING"],
+      ["8520260547","85","Syahrilsyah","Kepala Seksi","Asrama Haji Sumatera Selatan","IX. BIDANG AKOMODASI DAN KONSUMSI","C. SEKSI KEBERSIHAN"],
+      ["8820260547","88","H. Faizal M. Risnanda, S.I.P","Kepala Seksi","Kanwil Kemenhaj Prov. Sumsel","IX. BIDANG AKOMODASI DAN KONSUMSI","D. SEKSI PELAPORAN PETUGAS"],
+      ["9120260547","91","AKBP Budi Santoso, S.Sos","Koordinator","Polrestabes Palembang","X. BIDANG KEAMANAN","A. SEKSI KEAMANAN"],
+      ["1001447026","100","Sertu Rahmad Hadiansyah","Anggota","Koramil 0418 / 07 Sukarami","X. BIDANG KEAMANAN","A. SEKSI KEAMANAN"],
+      ["1101447026","110","Ardedi Sariyanto, SE, M.Si","Kepala Seksi","Kanwil Kemenhaj Prov. Sumsel","XI. BIDANG PERBEKALAN","A. SEKSI PENYERAHAN BAGASI"],
+      ["1181447026","118","H. M. Syaiful Akbar, S.H.I","Kepala Seksi","Kanwil Kemenhaj Prov. Sumsel","XI. BIDANG PERBEKALAN","B. SEKSI BARANG TERCECER"],
+      ["1211447026","121","H. Sukarli, SE., M.Si","Kepala Seksi","Kanwil Kemenhaj Prov. Sumsel","XI. BIDANG PERBEKALAN","C. SEKSI AIR ZAM-ZAM"],
+      ["1261447026","126","Indolas Rafflesia","Kepala Seksi","Kantor Imigrasi Klas I Palembang","XII. BIDANG IMIGRASI","-"],
+      ["1281447026","128","Sugianto","Anggota","Kantor Pelayanan Bea dan Cukai Palembang","XIII. BIDANG BEA CUKAI","-"],
+      ["1291447026","129","Verry Rizki Permana","Kepala Seksi","Angkasa Pura II","XIV. BIDANG PENERBANGAN","SEKSI PEMERIKSAAN JAMAAH & BARANG"],
+      ["1301447026","130","Bayu Purna Yudha","Anggota","Angkasa Pura II","XIV. BIDANG PENERBANGAN","SEKSI PEMERIKSAAN JAMAAH & BARANG"]
+    ];
+
+    let panitiaList = [];
+    let attendanceLogs = {};
+
+    function getLocalDateKey(dateObj = new Date()) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function getLocalMonthKey(dateObj = new Date()) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      return `${y}-${m}`;
+    }
+
+    function formatTime(dateObj) { return dateObj.toTimeString().split(' ')[0]; }
+    function timeToSeconds(timeStr) {
+      if (!timeStr) return 0;
+      const [h, m, s] = timeStr.split(':').map(Number);
+      return (h * 3600) + (m * 60) + (s || 0);
+    }
+    function secondsToTime(diffSec) {
+      const safeSec = Math.max(0, Math.floor(diffSec));
+      const hh = String(Math.floor(safeSec / 3600)).padStart(2, '0');
+      const mm = String(Math.floor((safeSec % 3600) / 60)).padStart(2, '0');
+      const ss = String(safeSec % 60).padStart(2, '0');
+      return `${hh}:${mm}:${ss}`;
+    }
+    function getEarliestCheckoutTime(datangStr) {
+      const startSec = timeToSeconds(datangStr);
+      return secondsToTime((startSec + MIN_WORK_SECONDS) % 86400);
+    }
+    function calcDurationSeconds(startStr, endStr) {
+      if (!startStr || !endStr) return 0;
+      const diff = timeToSeconds(endStr) - timeToSeconds(startStr);
+      return diff > 0 ? diff : 0;
+    }
+    function calcDuration(startStr, endStr) {
+      if (!startStr || !endStr || startStr === endStr) return "00:00:00";
+      return secondsToTime(calcDurationSeconds(startStr, endStr));
+    }
+
+    function calculateDistanceMeters(lat1, lng1, lat2, lng2) {
+      const R = 6371000;
+      const toRad = deg => (deg * Math.PI) / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLng = toRad(lng2 - lng1);
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+        Math.sin(dLng / 2) * Math.sin(dLng / 2);
+      return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+    }
+
+    function updateGpsIndicator(statusType, message, badgeText) {
+      const badge = document.getElementById('gpsBadge');
+      const textEl = document.getElementById('gpsStatusText');
+      badge.className = `gps-badge ${statusType}`;
+      badge.textContent = badgeText;
+      textEl.innerHTML = message;
+    }
+
+    function evaluateLocationAccess() {
+      if (!currentDeviceCoords) {
+        return {
+          allowed: false,
+          reason: 'GPS perangkat belum terbaca. Aktifkan Lokasi/GPS Android dan izinkan akses lokasi.'
+        };
+      }
+      const distance = calculateDistanceMeters(
+        currentDeviceCoords.lat,
+        currentDeviceCoords.lng,
+        allowedLocation.lat,
+        allowedLocation.lng
+      );
+      if (distance > allowedLocation.radiusMeters) {
+        return {
+          allowed: false,
+          distance,
+          reason: `Jarak Anda ${Math.round(distance)} m dari titik lokasi admin (batas maks. ${allowedLocation.radiusMeters} m).`
+        };
+      }
+      return { allowed: true, distance };
+    }
+
+    function refreshDeviceLocation(showAlertToast = false) {
+      if (!navigator.geolocation) {
+        updateGpsIndicator('invalid', 'Perangkat tidak mendukung Geolocation GPS.', 'GPS TIDAK ADA');
+        if (showAlertToast) showToast('Perangkat tidak mendukung GPS', 'error');
+        return;
+      }
+      updateGpsIndicator('checking', 'Sedang mengambil titik koordinat GPS...', 'MENCARI GPS');
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          currentDeviceCoords = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            accuracy: pos.coords.accuracy,
+            timestamp: Date.now()
+          };
+          const check = evaluateLocationAccess();
+          if (check.allowed) {
+            updateGpsIndicator(
+              'valid',
+              `Di titik lokasi admin (jarak <b>${Math.round(check.distance)} m</b> / maks. ${allowedLocation.radiusMeters} m)`,
+              'LOKASI VALID'
+            );
+            if (showAlertToast) showToast('Lokasi GPS sesuai titik admin', 'success');
+          } else {
+            updateGpsIndicator('invalid', `${check.reason}`, 'DI LUAR LOKASI');
+            if (showAlertToast) showToast('Di luar titik lokasi admin!', 'error');
+          }
+        },
+        (err) => {
+          currentDeviceCoords = null;
+          let msg = 'Gagal membaca lokasi GPS. Pastikan GPS Android aktif & izin lokasi diizinkan.';
+          if (err.code === 1) msg = 'Izin lokasi ditolak. Aktifkan izin Lokasi di pengaturan Android.';
+          if (err.code === 3) msg = 'Waktu pengambilan GPS habis. Tekan Cek Lokasi lagi.';
+          updateGpsIndicator('invalid', msg, 'GPS NONAKTIF');
+          if (showAlertToast) showToast('Izin atau sinyal GPS belum aktif', 'error');
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 5000 }
+      );
+    }
+
+    function loadAllowedLocationInputs() {
+      document.getElementById('allowedLatInput').value = allowedLocation.lat;
+      document.getElementById('allowedLngInput').value = allowedLocation.lng;
+      document.getElementById('allowedRadiusInput').value = allowedLocation.radiusMeters;
+    }
+
+    function useCurrentLocationForAdmin() {
+      if (!navigator.geolocation) {
+        alert('Perangkat tidak mendukung GPS.');
+        return;
+      }
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          currentDeviceCoords = {
+            lat: pos.coords.latitude,
+            lng: pos.coords.longitude,
+            accuracy: pos.coords.accuracy,
+            timestamp: Date.now()
+          };
+          document.getElementById('allowedLatInput').value = pos.coords.latitude.toFixed(6);
+          document.getElementById('allowedLngInput').value = pos.coords.longitude.toFixed(6);
+          showToast('Koordinat HP saat ini diisikan ke form', 'success');
+        },
+        () => alert('Gagal mengambil koordinat HP. Pastikan GPS aktif dan izin lokasi diizinkan.'),
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
+    function saveAllowedLocation() {
+      const lat = parseFloat(document.getElementById('allowedLatInput').value.trim());
+      const lng = parseFloat(document.getElementById('allowedLngInput').value.trim());
+      const radius = parseFloat(document.getElementById('allowedRadiusInput').value.trim());
+
+      if (Number.isNaN(lat) || lat < -90 || lat > 90) { alert('Latitude tidak valid.'); return; }
+      if (Number.isNaN(lng) || lng < -180 || lng > 180) { alert('Longitude tidak valid.'); return; }
+      if (Number.isNaN(radius) || radius < 10) { alert('Radius minimal 10 meter.'); return; }
+
+      allowedLocation = { lat, lng, radiusMeters: radius };
+      localStorage.setItem('kemenhaj_allowed_location_2026', JSON.stringify(allowedLocation));
+      refreshDeviceLocation(false);
+      alert(`Titik lokasi absensi disimpan (${lat}, ${lng} • radius ${radius} m).`);
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('scanToast');
+      toast.textContent = message;
+      toast.className = `toast-banner show ${type}`;
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => { toast.className = 'toast-banner'; }, 3500);
+    }
+
+    function playBeep(success = true) {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = success ? "sine" : "sawtooth";
+        osc.frequency.setValueAtTime(success ? 1046 : 220, ctx.currentTime);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + (success ? 0.14 : 0.35));
+      } catch (e) {}
+    }
+
+    function applyBackgroundImage(imageSrc) {
+      document.documentElement.style.setProperty('--bg-photo-url', `url("${imageSrc}")`);
+    }
+
+    function updateNavLockLabels() {
+      const icon = isProtectedUnlocked ? '🔓' : '🔒';
+      document.getElementById('navPage2').textContent = `${icon} 2. Rekap Absen Harian & Bulanan`;
+      document.getElementById('navPage3').textContent = `${icon} 3. Update Panitia`;
+    }
+
+    function openLockModal(targetPage) {
+      pendingTargetPage = targetPage;
+      const modal = document.getElementById('lockModal');
+      const input = document.getElementById('unlockPasswordInput');
+      const errEl = document.getElementById('lockErrorMsg');
+      const pageLabel = targetPage === 2 ? 'Halaman 2 (Rekap Absen)' : 'Halaman 3 (Update Panitia)';
+      document.getElementById('lockModalTitle').textContent = `🔒 Kunci ${pageLabel}`;
+      document.getElementById('lockModalDesc').textContent = `Masukkan kata sandi untuk membuka ${pageLabel}.`;
+      input.value = '';
+      errEl.textContent = '';
+      modal.classList.add('show');
+      setTimeout(() => input.focus(), 50);
+    }
+
+    function closeLockModal() {
+      pendingTargetPage = null;
+      document.getElementById('lockModal').classList.remove('show');
+      document.getElementById('unlockPasswordInput').value = '';
+      document.getElementById('lockErrorMsg').textContent = '';
+    }
+
+    function verifyUnlockPassword() {
+      const entered = document.getElementById('unlockPasswordInput').value;
+      const errEl = document.getElementById('lockErrorMsg');
+      if (entered === adminPassword) {
+        isProtectedUnlocked = true;
+        updateNavLockLabels();
+        const nextPage = pendingTargetPage || 2;
+        closeLockModal();
+        activatePage(nextPage);
+      } else {
+        errEl.textContent = 'Kata sandi salah. Silakan coba lagi.';
+        document.getElementById('unlockPasswordInput').select();
+      }
+    }
+
+    function lockProtectedPages() {
+      isProtectedUnlocked = false;
+      updateNavLockLabels();
+      activatePage(1);
+      showToast('Halaman 2 & 3 telah dikunci kembali', 'success');
+    }
+
+    function updateProtectedPassword() {
+      const input = document.getElementById('newPagePasswordInput');
+      const newPass = input.value.trim();
+      if (newPass.length < 4) { alert('Kata sandi baru minimal 4 karakter.'); return; }
+      adminPassword = newPass;
+      localStorage.setItem('kemenhaj_admin_pass_2026', adminPassword);
+      input.value = '';
+      alert('Kata sandi untuk Halaman 2 & 3 berhasil diperbarui.');
+    }
+
+    function activatePage(pageNum) {
+      currentPage = pageNum;
+      [1, 2, 3].forEach(n => {
+        const sec = document.getElementById(`page${n}`);
+        const btn = document.getElementById(`navPage${n}`);
+        sec.classList.toggle('active', n === pageNum);
+        btn.classList.toggle('active', n === pageNum);
+      });
+
+      if (pageNum === 1) refreshDeviceLocation(false);
+      else if (pageNum === 2) { populateBidangFilter(); renderRecap(); }
+      else if (pageNum === 3) { loadAllowedLocationInputs(); renderPanitiaMasterTable(); }
+    }
+
+    function switchPage(pageNum) {
+      if ((pageNum === 2 || pageNum === 3) && !isProtectedUnlocked) { openLockModal(pageNum); return; }
+      activatePage(pageNum);
+    }
+
+    function switchRecapMode(mode) {
+      recapMode = mode;
+      const isDaily = mode === 'HARIAN';
+      document.getElementById('tabHarian').classList.toggle('active', isDaily);
+      document.getElementById('tabBulanan').classList.toggle('active', !isDaily);
+      document.getElementById('rekapDateInput').style.display = isDaily ? 'inline-block' : 'none';
+      document.getElementById('rekapMonthInput').style.display = isDaily ? 'none' : 'inline-block';
+      document.getElementById('statusFilter').style.display = isDaily ? 'inline-block' : 'none';
+      document.getElementById('dailyTableWrapper').style.display = isDaily ? 'block' : 'none';
+      document.getElementById('monthlyTableWrapper').style.display = isDaily ? 'none' : 'block';
+      renderRecap();
+    }
+
+    function initApp() {
+      registerServiceWorker();
+
+      const savedPass = localStorage.getItem('kemenhaj_admin_pass_2026');
+      if (savedPass) adminPassword = savedPass;
+
+      const savedLoc = localStorage.getItem('kemenhaj_allowed_location_2026');
+      if (savedLoc) {
+        try {
+          const parsedLoc = JSON.parse(savedLoc);
+          if (typeof parsedLoc.lat === 'number' && typeof parsedLoc.lng === 'number') {
+            allowedLocation = {
+              lat: parsedLoc.lat,
+              lng: parsedLoc.lng,
+              radiusMeters: Number(parsedLoc.radiusMeters) || 150
+            };
+          }
+        } catch (e) {}
+      }
+
+      const savedBg = localStorage.getItem('kemenhaj_custom_bg');
+      applyBackgroundImage(savedBg || DEFAULT_BG_IMAGE);
+
+      const savedRoster = localStorage.getItem('kemenhaj_panitia_2026');
+      if (savedRoster) {
+        panitiaList = JSON.parse(savedRoster);
+      } else {
+        panitiaList = INITIAL_PANITIA_RAW.map(r => ({
+          id: r[0], no: r[1], nama: r[2], jabatan: r[3], instansi: r[4], bidang: r[5], seksi: r[6]
+        }));
+      }
+
+      const savedLogs = localStorage.getItem('kemenhaj_absen_logs_2026');
+      if (savedLogs) attendanceLogs = JSON.parse(savedLogs);
+
+      const savedLogo = localStorage.getItem('kemenhaj_custom_logo');
+      if (savedLogo) document.getElementById('kemenhajLogo').src = savedLogo;
+
+      const now = new Date();
+      document.getElementById('rekapDateInput').value = getLocalDateKey(now);
+      document.getElementById('rekapMonthInput').value = getLocalMonthKey(now);
+
+      loadAllowedLocationInputs();
+      updateNavLockLabels();
+      populateBidangFilter();
+      updateClock();
+      setInterval(updateClock, 1000);
+      refreshDeviceLocation(false);
+
+      const inputEl = document.getElementById('barcodeInput');
+      inputEl.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          const code = this.value.trim();
+          if (code) { handleBarcodeScan(code); this.value = ''; }
+        }
+      });
+
+      const passInputEl = document.getElementById('unlockPasswordInput');
+      passInputEl.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter') { e.preventDefault(); verifyUnlockPassword(); }
+        else if (e.key === 'Escape') { e.preventDefault(); closeLockModal(); }
+      });
+    }
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('liveClock').textContent = formatTime(now);
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      const dateText = now.toLocaleDateString('id-ID', options);
+      document.getElementById('liveDate').textContent = dateText;
+      document.getElementById('activeDateBadge').textContent = dateText;
+    }
+
+    function replayLogoSlideIn() {
+      const logo = document.getElementById('kemenhajLogo');
+      logo.style.animation = 'none';
+      void logo.offsetWidth;
+      logo.style.animation = '';
+    }
+
+    function focusScanner() { document.getElementById('barcodeInput').focus(); }
+
+    function processManualScan() {
+      const inputEl = document.getElementById('barcodeInput');
+      const code = inputEl.value.trim();
+      if (code) { handleBarcodeScan(code); inputEl.value = ''; }
+      inputEl.focus();
+    }
+
+    function handleBarcodeScan(rawCode) {
+      const cleanId = rawCode.replace(/\s+/g, '');
+      const card = document.getElementById('lastScanCard');
+      const badge = document.getElementById('lastScanBadge');
+      const notifTextEl = document.getElementById('lastScanNotifText');
+      const nameEl = document.getElementById('lastScanName');
+      const metaEl = document.getElementById('lastScanMeta');
+
+      const locCheck = evaluateLocationAccess();
+      if (!locCheck.allowed) {
+        playBeep(false);
+        card.className = 'scan-result-card error';
+        badge.textContent = 'SCAN DITOLAK • DILUAR TITIK LOKASI';
+        notifTextEl.style.display = 'block';
+        notifTextEl.className = 'scan-notif-text danger-text';
+        notifTextEl.textContent = 'Lokasi Tidak Sesuai !!!';
+        nameEl.textContent = `Barcode: ${cleanId}`;
+        metaEl.innerHTML = `
+          <span style="color:#fca5a5;">${locCheck.reason}</span><br/>
+          Titik admin: <code>${allowedLocation.lat}, ${allowedLocation.lng}</code> (radius ${allowedLocation.radiusMeters} m).
+        `;
+        showToast('Lokasi tidak sesuai titik admin!', 'error');
+        refreshDeviceLocation(false);
+        return;
+      }
+
+      const person = panitiaList.find(p => String(p.id) === cleanId);
+      if (!person) {
+        playBeep(false);
+        card.className = 'scan-result-card error';
+        badge.textContent = 'ID TIDAK TERDAFTAR';
+        notifTextEl.style.display = 'none';
+        nameEl.textContent = `Barcode: ${cleanId}`;
+        metaEl.innerHTML = 'Nomor ID tidak ditemukan pada database Panitia Debarkasi Palembang.';
+        return;
+      }
+
+      const today = getLocalDateKey(new Date());
+      if (!attendanceLogs[today]) attendanceLogs[today] = {};
+
+      const nowStr = formatTime(new Date());
+      const record = attendanceLogs[today][cleanId];
+
+      if (!record || !record.datang) {
+        attendanceLogs[today][cleanId] = { datang: nowStr, pulang: '' };
+        localStorage.setItem('kemenhaj_absen_logs_2026', JSON.stringify(attendanceLogs));
+        playBeep(true);
+
+        const earliestCheckout = getEarliestCheckoutTime(nowStr);
+        card.className = 'scan-result-card success';
+        badge.textContent = `ABSEN DATANG TERCATAT • PUKUL ${nowStr}`;
+        notifTextEl.style.display = 'block';
+        notifTextEl.className = 'scan-notif-text thanks';
+        notifTextEl.textContent = 'Terimakasih';
+        nameEl.textContent = `${person.nama} (ID: ${person.id})`;
+        metaEl.innerHTML = `
+          <b>Jabatan:</b> ${person.jabatan} &bull; <b>Instansi:</b> ${person.instansi}<br/>
+          <b>Bidang:</b> ${person.bidang}<br/>
+          <b>Datang:</b> ${nowStr} &nbsp;|&nbsp;
+          <b>Bisa Absen Pulang Mulai:</b> <span class="eligible-time-highlight">${earliestCheckout}</span> (setelah 8 jam)
+        `;
+        showToast(`Terimakasih • Bisa pulang mulai ${earliestCheckout}`, 'success');
+        if (currentPage === 2) renderRecap();
+        return;
+      }
+
+      const elapsedSec = calcDurationSeconds(record.datang, nowStr);
+      const elapsedFormatted = secondsToTime(elapsedSec);
+      const earliestCheckout = getEarliestCheckoutTime(record.datang);
+
+      if (elapsedSec < MIN_WORK_SECONDS) {
+        playBeep(false);
+        card.className = 'scan-result-card error';
+        badge.textContent = `SCAN PULANG DITOLAK • PUKUL ${nowStr}`;
+        notifTextEl.style.display = 'block';
+        notifTextEl.className = 'scan-notif-text danger-text';
+        notifTextEl.textContent = 'Jam Kerja Kurang !!!';
+        nameEl.textContent = `${person.nama} (ID: ${person.id})`;
+        metaEl.innerHTML = `
+          <b>Jabatan:</b> ${person.jabatan} &bull; <b>Instansi:</b> ${person.instansi}<br/>
+          <b>Datang:</b> ${record.datang} &nbsp;|&nbsp; <b>Durasi Saat Ini:</b> ${elapsedFormatted}<br/>
+          <span style="color:#fca5a5;">Absen pulang baru bisa dilakukan mulai pukul <b>${earliestCheckout}</b> (minimal 8 jam kerja).</span>
+        `;
+        showToast('Jam Kerja Kurang !!!', 'error');
+        if (currentPage === 2) renderRecap();
+        return;
+      }
+
+      attendanceLogs[today][cleanId].pulang = nowStr;
+      localStorage.setItem('kemenhaj_absen_logs_2026', JSON.stringify(attendanceLogs));
+      playBeep(true);
+
+      card.className = 'scan-result-card success';
+      badge.textContent = `SCAN SELESAI • PUKUL ${nowStr}`;
+      notifTextEl.style.display = 'block';
+      notifTextEl.className = 'scan-notif-text thanks';
+      notifTextEl.textContent = 'Terimakasih';
+      nameEl.textContent = `${person.nama} (ID: ${person.id})`;
+      metaEl.innerHTML = `
+        <b>Jabatan:</b> ${person.jabatan} &bull; <b>Instansi:</b> ${person.instansi}<br/>
+        <b>Bidang:</b> ${person.bidang}<br/>
+        <b>Datang:</b> ${record.datang} &nbsp;|&nbsp; <b>Pulang:</b> ${nowStr} &nbsp;|&nbsp;
+        <b>Durasi:</b> ${elapsedFormatted}
+      `;
+      showToast('Terimakasih', 'success');
+      if (currentPage === 2) renderRecap();
+    }
+
+    function populateBidangFilter() {
+      const select = document.getElementById('bidangFilter');
+      const currentVal = select.value;
+      const bidangSet = [...new Set(panitiaList.map(p => p.bidang).filter(Boolean))];
+      select.innerHTML = '<option value="ALL">Semua Bidang Kepanitiaan</option>';
+      bidangSet.forEach(b => {
+        const opt = document.createElement('option');
+        opt.value = b;
+        opt.textContent = b;
+        select.appendChild(opt);
+      });
+      if (bidangSet.includes(currentVal)) select.value = currentVal;
+    }
+
+    function getFilteredPanitia() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const bidangVal = document.getElementById('bidangFilter').value;
+      return panitiaList.filter(p => {
+        const matchQuery =
+          p.nama.toLowerCase().includes(query) ||
+          String(p.id).includes(query) ||
+          p.jabatan.toLowerCase().includes(query) ||
+          p.instansi.toLowerCase().includes(query);
+        const matchBidang = bidangVal === 'ALL' || p.bidang === bidangVal;
+        return matchQuery && matchBidang;
+      });
+    }
+
+    function renderRecap() {
+      if (recapMode === 'BULANAN') renderMonthlyRecap();
+      else renderDailyRecap();
+    }
+
+    function renderDailyRecap() {
+      const selectedDate = document.getElementById('rekapDateInput').value || getLocalDateKey(new Date());
+      const dayData = attendanceLogs[selectedDate] || {};
+      const statusVal = document.getElementById('statusFilter').value;
+
+      let hadirCount = 0;
+      let pulangCount = 0;
+      panitiaList.forEach(p => {
+        const log = dayData[p.id];
+        if (log && log.datang) hadirCount++;
+        if (log && log.pulang) pulangCount++;
+      });
+
+      document.getElementById('statLabel1').textContent = 'Total Panitia';
+      document.getElementById('statLabel2').textContent = 'Sudah Datang';
+      document.getElementById('statLabel3').textContent = 'Sudah Pulang';
+      document.getElementById('statLabel4').textContent = 'Belum Absen';
+
+      document.getElementById('statTotal').textContent = panitiaList.length;
+      document.getElementById('statHadir').textContent = hadirCount;
+      document.getElementById('statPulang').textContent = pulangCount;
+      document.getElementById('statBelum').textContent = panitiaList.length - hadirCount;
+
+      const filtered = getFilteredPanitia().filter(p => {
+        const log = dayData[p.id];
+        return (
+          statusVal === 'ALL' ||
+          (statusVal === 'HADIR' && log && log.datang) ||
+          (statusVal === 'BELUM' && (!log || !log.datang))
+        );
+      });
+
+      const tbody = document.getElementById('dailyAttendanceBody');
+      tbody.innerHTML = '';
+
+      filtered.forEach(p => {
+        const log = dayData[p.id] || {};
+        const durasi = calcDuration(log.datang, log.pulang);
+        let statusHtml = '<span class="pill pill-belum">Belum Absen</span>';
+        if (log.datang && log.pulang) statusHtml = '<span class="pill pill-hadir">Hadir Lengkap</span>';
+        else if (log.datang) statusHtml = '<span class="pill pill-kerja">Bertugas</span>';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.no}</td>
+          <td><code>${p.id}</code></td>
+          <td>
+            <div style="font-weight:700; color:#fff;">${p.nama}</div>
+            <div style="font-size:0.75rem; color:#cbd5e1;">${p.instansi}</div>
+          </td>
+          <td>
+            <div style="font-weight:600;">${p.jabatan}</div>
+            <div style="font-size:0.73rem; color:#eab308;">${p.bidang}</div>
+          </td>
+          <td style="font-variant-numeric:tabular-nums; color:#34d399; font-weight:700;">${log.datang || '-'}</td>
+          <td style="font-variant-numeric:tabular-nums; color:#60a5fa; font-weight:700;">${log.pulang || '-'}</td>
+          <td style="font-variant-numeric:tabular-nums;">${durasi}</td>
+          <td>${statusHtml}</td>
+          <td>
+            <button class="btn btn-outline" style="padding:5px 10px; min-height:34px; font-size:0.75rem;" onclick="handleBarcodeScan('${p.id}')">
+              Simulasi Scan
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function computeMonthlySummary(monthKey) {
+      const dateKeys = Object.keys(attendanceLogs).filter(k => k.startsWith(monthKey + '-'));
+      return panitiaList.map(p => {
+        let hadirHari = 0;
+        let pulangLengkapHari = 0;
+        let totalDetik = 0;
+
+        dateKeys.forEach(dk => {
+          const log = attendanceLogs[dk] && attendanceLogs[dk][p.id];
+          if (log && log.datang) hadirHari++;
+          if (log && log.datang && log.pulang) {
+            pulangLengkapHari++;
+            totalDetik += calcDurationSeconds(log.datang, log.pulang);
+          }
+        });
+
+        return { ...p, hadirHari, pulangLengkapHari, totalDurasi: secondsToTime(totalDetik) };
+      });
+    }
+
+    function renderMonthlyRecap() {
+      const monthKey = document.getElementById('rekapMonthInput').value || getLocalMonthKey(new Date());
+      const summaryAll = computeMonthlySummary(monthKey);
+      const aktifBulanIni = summaryAll.filter(s => s.hadirHari > 0).length;
+      const lengkapBulanIni = summaryAll.filter(s => s.pulangLengkapHari > 0).length;
+
+      document.getElementById('statLabel1').textContent = 'Total Panitia';
+      document.getElementById('statLabel2').textContent = 'Aktif Bulan Ini';
+      document.getElementById('statLabel3').textContent = 'Pernah Pulang Lengkap';
+      document.getElementById('statLabel4').textContent = 'Belum Tercatat';
+
+      document.getElementById('statTotal').textContent = panitiaList.length;
+      document.getElementById('statHadir').textContent = aktifBulanIni;
+      document.getElementById('statPulang').textContent = lengkapBulanIni;
+      document.getElementById('statBelum').textContent = panitiaList.length - aktifBulanIni;
+
+      const filteredIds = new Set(getFilteredPanitia().map(p => String(p.id)));
+      const tbody = document.getElementById('monthlyAttendanceBody');
+      tbody.innerHTML = '';
+
+      summaryAll
+        .filter(item => filteredIds.has(String(item.id)))
+        .forEach(item => {
+          let statusHtml = '<span class="pill pill-belum">Belum Ada Data</span>';
+          if (item.pulangLengkapHari > 0) statusHtml = '<span class="pill pill-hadir">Aktif</span>';
+          else if (item.hadirHari > 0) statusHtml = '<span class="pill pill-kerja">Perlu Pulang >=8j</span>';
+
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${item.no}</td>
+            <td><code>${item.id}</code></td>
+            <td>
+              <div style="font-weight:700; color:#fff;">${item.nama}</div>
+              <div style="font-size:0.75rem; color:#cbd5e1;">${item.instansi}</div>
+            </td>
+            <td>
+              <div style="font-weight:600;">${item.jabatan}</div>
+              <div style="font-size:0.73rem; color:#eab308;">${item.bidang}</div>
+            </td>
+            <td style="font-weight:700; color:#34d399;">${item.hadirHari} hari</td>
+            <td style="font-weight:700; color:#60a5fa;">${item.pulangLengkapHari} hari</td>
+            <td style="font-variant-numeric:tabular-nums;">${item.totalDurasi}</td>
+            <td>${statusHtml}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+    }
+
+    function exportRecapToExcel() {
+      if (recapMode === 'BULANAN') {
+        const monthKey = document.getElementById('rekapMonthInput').value || getLocalMonthKey(new Date());
+        const summaryAll = computeMonthlySummary(monthKey);
+        const exportRows = summaryAll.map(item => ({
+          'NO': item.no,
+          'ID BARCODE': item.id,
+          'NAMA PANITIA': item.nama,
+          'JABATAN': item.jabatan,
+          'INSTANSI': item.instansi,
+          'BIDANG': item.bidang,
+          'BULAN': monthKey,
+          'HARI DATANG': item.hadirHari,
+          'HARI PULANG LENGKAP': item.pulangLengkapHari,
+          'TOTAL JAM KERJA': item.totalDurasi
+        }));
+        const ws = XLSX.utils.json_to_sheet(exportRows);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Rekap Bulanan');
+        XLSX.writeFile(wb, `REKAP_BULANAN_DEBARKASI_PALEMBANG_${monthKey}.xlsx`);
+        return;
+      }
+
+      const selectedDate = document.getElementById('rekapDateInput').value || getLocalDateKey(new Date());
+      const dayData = attendanceLogs[selectedDate] || {};
+      const exportRows = panitiaList.map(p => {
+        const log = dayData[p.id] || {};
+        const durasi = calcDuration(log.datang, log.pulang);
+        const status = log.datang && log.pulang ? 'Hadir' : (log.datang ? 'Durasi Kurang / Bertugas' : 'Tidak Hadir');
+        return {
+          'NO': p.no,
+          'ID BARCODE': p.id,
+          'NAMA PANITIA': p.nama,
+          'JABATAN': p.jabatan,
+          'INSTANSI': p.instansi,
+          'BIDANG': p.bidang,
+          'TANGGAL': selectedDate,
+          'JAM DATANG': log.datang || '00:00:00',
+          'JAM PULANG': log.pulang || '00:00:00',
+          'JAM KERJA': durasi,
+          'KETERANGAN': status
+        };
+      });
+      const ws = XLSX.utils.json_to_sheet(exportRows);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Rekap Harian');
+      XLSX.writeFile(wb, `REKAP_HARIAN_DEBARKASI_PALEMBANG_${selectedDate}.xlsx`);
+    }
+
+    function resetSelectedDateAttendance() {
+      const selectedDate = document.getElementById('rekapDateInput').value || getLocalDateKey(new Date());
+      if (confirm(`Yakin ingin menghapus seluruh catatan scan absensi untuk tanggal ${selectedDate}?`)) {
+        delete attendanceLogs[selectedDate];
+        localStorage.setItem('kemenhaj_absen_logs_2026', JSON.stringify(attendanceLogs));
+        renderRecap();
+      }
+    }
+
+    function renderPanitiaMasterTable() {
+      document.getElementById('panitiaCountBadge').textContent = `${panitiaList.length} Panitia`;
+      const tbody = document.getElementById('panitiaMasterBody');
+      tbody.innerHTML = '';
+
+      panitiaList.forEach((p, idx) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.no || (idx + 1)}</td>
+          <td><code>${p.id}</code></td>
+          <td style="font-weight:700; color:#fff;">${p.nama}</td>
+          <td>${p.jabatan || '-'}</td>
+          <td>${p.instansi || '-'}</td>
+          <td style="color:#eab308;">${p.bidang || '-'}</td>
+          <td>
+            <div style="display:flex; gap:6px;">
+              <button class="btn btn-outline" style="padding:5px 10px; min-height:34px; font-size:0.75rem;" onclick="editPanitia('${p.id}')">Edit</button>
+              <button class="btn btn-danger" style="padding:5px 10px; min-height:34px; font-size:0.75rem;" onclick="deletePanitia('${p.id}')">Hapus</button>
+            </div>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function savePanitiaForm(event) {
+      event.preventDefault();
+      const editOriginalId = document.getElementById('editOriginalId').value.trim();
+      const idVal = document.getElementById('panitiaIdInput').value.trim().replace(/\s+/g, '');
+      const noVal = document.getElementById('panitiaNoInput').value.trim() || String(panitiaList.length + 1);
+      const namaVal = document.getElementById('panitiaNamaInput').value.trim();
+      const jabatanVal = document.getElementById('panitiaJabatanInput').value.trim() || '-';
+      const instansiVal = document.getElementById('panitiaInstansiInput').value.trim() || '-';
+      const bidangVal = document.getElementById('panitiaBidangInput').value.trim() || 'PIMPINAN / KOORDINATOR';
+
+      if (!idVal || !namaVal) { alert('ID Barcode dan Nama Panitia wajib diisi.'); return; }
+
+      const duplicate = panitiaList.find(p => String(p.id) === idVal && String(p.id) !== editOriginalId);
+      if (duplicate) { alert(`ID Barcode "${idVal}" sudah digunakan oleh ${duplicate.nama}.`); return; }
+
+      if (editOriginalId) {
+        const idx = panitiaList.findIndex(p => String(p.id) === editOriginalId);
+        if (idx !== -1) {
+          panitiaList[idx] = { ...panitiaList[idx], id: idVal, no: noVal, nama: namaVal, jabatan: jabatanVal, instansi: instansiVal, bidang: bidangVal };
+        }
+      } else {
+        panitiaList.push({ id: idVal, no: noVal, nama: namaVal, jabatan: jabatanVal, instansi: instansiVal, bidang: bidangVal, seksi: '-' });
+      }
+
+      localStorage.setItem('kemenhaj_panitia_2026', JSON.stringify(panitiaList));
+      populateBidangFilter();
+      renderPanitiaMasterTable();
+      resetPanitiaForm();
+      alert('Data panitia berhasil disimpan.');
+    }
+
+    function editPanitia(idStr) {
+      const target = panitiaList.find(p => String(p.id) === String(idStr));
+      if (!target) return;
+      document.getElementById('editOriginalId').value = target.id;
+      document.getElementById('panitiaIdInput').value = target.id;
+      document.getElementById('panitiaNoInput').value = target.no;
+      document.getElementById('panitiaNamaInput').value = target.nama;
+      document.getElementById('panitiaJabatanInput').value = target.jabatan;
+      document.getElementById('panitiaInstansiInput').value = target.instansi;
+      document.getElementById('panitiaBidangInput').value = target.bidang;
+      document.getElementById('submitPanitiaBtn').textContent = '💾 Perbarui Panitia';
+      document.getElementById('panitiaIdInput').focus();
+    }
+
+    function deletePanitia(idStr) {
+      const target = panitiaList.find(p => String(p.id) === String(idStr));
+      if (!target) return;
+      if (confirm(`Hapus panitia "${target.nama}" (ID: ${target.id})?`)) {
+        panitiaList = panitiaList.filter(p => String(p.id) !== String(idStr));
+        localStorage.setItem('kemenhaj_panitia_2026', JSON.stringify(panitiaList));
+        populateBidangFilter();
+        renderPanitiaMasterTable();
+      }
+    }
+
+    function resetPanitiaForm() {
+      document.getElementById('panitiaForm').reset();
+      document.getElementById('editOriginalId').value = '';
+      document.getElementById('submitPanitiaBtn').textContent = '💾 Simpan Panitia';
+    }
+
+    function handleExcelUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames.includes('Id') ? 'Id' : workbook.SheetNames[0];
+        const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1 });
+
+        const parsed = [];
+        let currentBidang = "PIMPINAN / KOORDINATOR";
+        let currentSeksi = "-";
+
+        rows.forEach(row => {
+          const idVal = row[0];
+          const noVal = row[1] ? String(row[1]).trim() : "";
+          const namaVal = row[2] ? String(row[2]).trim() : "";
+          const jabVal = row[4] ? String(row[4]).trim() : "";
+          const ketVal = row[5] ? String(row[5]).trim() : "";
+
+          if (!idVal) {
+            if (noVal && noVal !== 'NO') { currentBidang = noVal; currentSeksi = "-"; }
+            else if (namaVal && namaVal !== 'N A M A') { currentSeksi = namaVal; }
+          } else if (/^\d+$/.test(String(idVal).trim())) {
+            parsed.push({ id: String(idVal).trim(), no: noVal.replace('.', ''), nama: namaVal, jabatan: jabVal, instansi: ketVal, bidang: currentBidang, seksi: currentSeksi });
+          }
+        });
+
+        if (parsed.length > 0) {
+          panitiaList = parsed;
+          localStorage.setItem('kemenhaj_panitia_2026', JSON.stringify(panitiaList));
+          populateBidangFilter();
+          renderPanitiaMasterTable();
+          alert(`Berhasil memuat ${parsed.length} data panitia dari sheet "${sheetName}"!`);
+        } else {
+          alert('Format data ID panitia tidak ditemukan di file Excel tersebut.');
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        document.getElementById('kemenhajLogo').src = e.target.result;
+        localStorage.setItem('kemenhaj_custom_logo', e.target.result);
+        replayLogoSlideIn();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleBackgroundUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        applyBackgroundImage(e.target.result);
+        localStorage.setItem('kemenhaj_custom_bg', e.target.result);
+        showToast('Latar belakang aplikasi diperbarui', 'success');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
